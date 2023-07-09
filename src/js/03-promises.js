@@ -1,3 +1,7 @@
+import Notiflix from 'notiflix';
+
+// Notiflix.Notify.info('Cogito ergo sum');
+
 const form = document.querySelector(".form");
 
 form.addEventListener("submit", handleSubmit);
@@ -14,10 +18,16 @@ function handleSubmit(event) {
    const time = Number(delayValue) + (Number(stepValue) * (i - 1));
     createPromise(i, time)
     .then(({ position, delay }) => {
-    console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+    Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,
+  {
+    timeout: 4000,
+  },);
   })
   .catch(({ position, delay }) => {   
-    console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+    Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,
+  {
+    timeout: 4000,
+  },);
   });
   }
   event.currentTarget.reset();
@@ -29,10 +39,16 @@ function createPromise(position, delay) {
       const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
         // Fulfill
-        console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,
+  {
+    timeout: 4000,
+  },);
       } else {
         // Reject
-        console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,
+  {
+    timeout: 4000,
+  },);
       }
     }, delay);
    })
