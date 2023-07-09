@@ -22,6 +22,7 @@ flatpickr('#datetime-picker', {
           startBtn.removeAttribute('disabled');
           startBtn.addEventListener("click", onClickStart);
         function onClickStart() {
+            startBtn.setAttribute('disabled', true);
           timerId = setInterval(() => {
              date = new Date;
              const ms = selectedDates[0] - date;

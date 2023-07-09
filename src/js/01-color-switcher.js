@@ -7,8 +7,8 @@ let timerId = null;
 
 startBtn.addEventListener("click", () => {
   timerId = setInterval(() => {
-       const color = getRandomHexColor();
-      body.style.backgroundColor = color;
+       const bgColor = getRandomHexColor();
+      body.style.backgroundColor = bgColor;
       startBtn.setAttribute('disabled', true);
       stopBtn.removeAttribute('disabled')
   }, 1000);
