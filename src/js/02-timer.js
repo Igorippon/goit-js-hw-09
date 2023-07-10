@@ -2,42 +2,51 @@ import flatpickr from "flatpickr";
 import Notiflix from 'notiflix';
 import "flatpickr/dist/flatpickr.min.css"
 
-const startBtn = document.querySelector('button[data-start]');
-startBtn.setAttribute('disabled', true);
-const days = document.querySelector('span[data-days]');
-const hours = document.querySelector('span[data-hours]');
-const minutes = document.querySelector('span[data-minutes]');
-const seconds = document.querySelector('span[data-seconds]');
+const refs = {
+ startBtn : document.querySelector('button[data-start]'),
+ days : document.querySelector('span[data-days]'),
+ hours : document.querySelector('span[data-hours]'),
+ minutes : document.querySelector('span[data-minutes]'),
+ seconds : document.querySelector('span[data-seconds]'),
+}
+
+refs.startBtn.setAttribute('disabled', true);
 let timerId = null;
 
-flatpickr('#datetime-picker', {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-        let date = new Date;
-    if (date >= selectedDates[0]) {
-            Notiflix.Report.failure("Please choose a date in the future")
-        } else {
-          startBtn.removeAttribute('disabled');
-          startBtn.addEventListener("click", onClickStart);
-        function onClickStart() {
-            startBtn.setAttribute('disabled', true);
-          timerId = setInterval(() => {
-             date = new Date;
-             const ms = selectedDates[0] - date;
-                    if (ms <= 0) {
-                      clearInterval(timerId); 
-                    } else {
-                        const valueTimer = convertMs(ms);
-                      addLeadingZero(valueTimer);
-                   }   
-    }, 1000);
-}
-        }
+
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose([selectedDates]) {
+    const date = Date.now();
+    if (date >= selectedDates) {
+      Notiflix.Report.failure("Please choose a date in the future")
     }
-});
+    refs.startBtn.removeAttribute('disabled'); 
+  }
+}
+
+const fp = flatpickr('#datetime-picker', options);
+
+refs.startBtn.addEventListener("click", onClickStart);
+function onClickStart() {
+  const userDate = fp.selectedDates[0];
+
+        refs.startBtn.setAttribute('disabled', true);
+          timerId = setInterval(() => {
+       const date = Date.now();
+        const ms = userDate - date;
+        if (ms <= 0) {
+          clearInterval(timerId);
+        } else {
+          const valueTimer = convertMs(ms);
+          aupdateTimer(valueTimer);
+        }
+      }, 1000);    
+}
+
 
 function convertMs(ms) {
 
@@ -59,10 +68,13 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function addLeadingZero(value) {
-                  days.textContent = value.days.toString().padStart(2, '0'); 
-                  hours.textContent = value.hours.toString().padStart(2, '0');
-                  minutes.textContent = value.minutes.toString().padStart(2, '0');
-                  seconds.textContent = value.seconds.toString().padStart(2, '0');
+function aupdateTimer({ days, hours, minutes, seconds }) {
+                  refs.days.textContent = addLeadingZero(days); 
+                  refs.hours.textContent = addLeadingZero(hours);
+                  refs.minutes.textContent = addLeadingZero(minutes);
+                  refs.seconds.textContent = addLeadingZero(seconds);
 }
 
+function addLeadingZero(value) {
+  return String(value).padStart(2, 0);
+}

@@ -1,7 +1,5 @@
 import Notiflix from 'notiflix';
 
-// Notiflix.Notify.info('Cogito ergo sum');
-
 const form = document.querySelector(".form");
 
 form.addEventListener("submit", handleSubmit);
@@ -14,6 +12,7 @@ function handleSubmit(event) {
      const delayValue = delay.value;
      const stepValue = step.value;
      const amountValue = amount.value
+  
  for (let i = 1; i <= amountValue; i++){
    const time = Number(delayValue) + (Number(stepValue) * (i - 1));
     createPromise(i, time)
@@ -38,17 +37,9 @@ function createPromise(position, delay) {
     setTimeout(() => {
       const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
-        // Fulfill
-        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,
-  {
-    timeout: 4000,
-  },);
+         res({ position, delay });
       } else {
-        // Reject
-        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,
-  {
-    timeout: 4000,
-  },);
+         rej({ position, delay })
       }
     }, delay);
    })
